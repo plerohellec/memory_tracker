@@ -1,0 +1,16 @@
+module MemoryTracker
+  class Engine < Rails::Engine
+
+    engine_base_dir = File.expand_path("../../..",     __FILE__)
+    app_base_dir    = File.expand_path("../../../app", __FILE__)
+    lib_base_dir    = File.expand_path("../../../lib", __FILE__)
+
+    config.autoload_paths << lib_base_dir
+
+    initializer "memory_tracker.add_middleware" do |app|
+      app.middleware.use MemoryTracker::Middleware
+      $memory_tracker_data = MemoryTracker::Data.new
+    end
+  end
+end
+

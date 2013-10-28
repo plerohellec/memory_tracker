@@ -1,0 +1,15 @@
+<table width="100%">
+  <tr>
+    <th>Controller Action</th>
+    <th>Calls</th>
+  </tr>
+  <% @sorted_cas.each do |ca| %>
+  <% num = @data[ca][:num] %>
+    <tr>
+      <td><%= link_to ca, memory_tracker_ca_path(URI::escape(ca)) %></td>
+      <td><%= num %></td>
+    </tr>
+  <% end %>
+</table>
+
+<br/>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MemoryTracker Dashboard</title>
+  <%= csrf_meta_tag %>
+
+  <style>
+    body, td, th {
+        font-family: Verdana, Arial, sans-serif;
+        font-size: 14px }
+    th {
+      text-align: right;
+      font: bold
+    }
+    tr { border-top: 1px solid #444;
+         text-align: right
+       }
+    td { text-align: right }
+  </style>
+</head>
+<body>
+
+<%= yield %>
+
+<br>
+<p><%= link_to 'Back to the application', '/' %></p>
+
+</body>
+</html>
