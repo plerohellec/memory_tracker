@@ -13,30 +13,45 @@ module MemoryTracker
     end
     
     def start_request(env)
-      request = Request.new(env)
+      @request = Request.new(env)
     end
     
     def end_request(status)
-      
+      @request.close
+      @gcstat_logger.info @request.logline
+      LiveStoreManager.push(@request)
     end
   end
   
   class Request
-    attr_reader :count, :heap_count, :rss, :heap_live_num
     attr_reader :controller, :action
+    def initialize(env)
+      @start_gcstat = GcStat.new(rss, vsize)
+    end
+    
+    def close
+      @end_gcstat = GcStat.new(rss, vsize)
+      @stats = GcStatIncrement.new(@start_gcstat, @end_gcstat)
+    end
+    
+    def logline
+    end
   end
   
   class GcStat
-    def initialize(gcstat)
-      @before = gcstat
-      @after = GC.stat
-    end
-    
-    def gcdiff
+    def initialize(rss, vsize)
+      @rss  = rss
+      @vsize = vsize
+      @stat = GC.stat
     end
   end
   
-  class LiveStore
+  class GcStatIncrement
+    def initialize(controller, action, before, after)
+    end
+  end
+  
+  class LiveStore::Manager
     def initialize(window_length)
       @window1 = Window.new(Time.now - length/2)
       @window2 = Window.new(Time.now)
@@ -47,9 +62,8 @@ module MemoryTracker
         @window1 = @window2
         @window2 = Window.new(Time.now)
       end
-    endd
+    end
         
-    
     def push
       reset_windows
       @window1.push(request)
@@ -65,10 +79,22 @@ module MemoryTracker
     attr_reader :start_time, :duration, :size
     attr_accessor :data # {}
     
+    def initialize
+      @data = {}
+    end
+    
     def push(request)
       @size += 1
+      @stats += request.gcstat
     end
   end
     
+  class LiveStore::Stat
+    def initialize
+    end
+    
+    def <<(request)
+      
+  end
     
 end
