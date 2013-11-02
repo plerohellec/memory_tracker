@@ -1,6 +1,20 @@
 = memory_tracker
 
-Description goes here.
+MemoryTracker collects and analyzes memory usage data for each controller action of a Rails application.
+
+MemoryTracker is a Rails engine that implements a middleware to capture stats before and after each query. 
+
+== How?
+It uses GC.stats (Ruby garbage collector) to find how many objects were allocated, how many heaps were created and how many times the garbage collecctor ran.
+
+== Features
+* Collect stats on each controller action memory consumption.
+* Write a log file with GC.stat data.
+* The engine includes a couple of web pages that shows a summary of memory utilization per controller action.
+
+== Enable MemoryTracker in a Rails application
+In config/routes.rb
+  mount MemoryTracker::Engine, at: "/memory_tracker"
 
 == Contributing to memory_tracker
  
