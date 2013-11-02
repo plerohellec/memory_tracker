@@ -18,7 +18,7 @@ module MemoryTracker
     end
 
    private
-    def add_request(ca, operations, tables)
+    def add_request(ca)
       if @stats[ca]
         @stats[ca][:num] += 1
       else

@@ -9,8 +9,8 @@ module MemoryTracker
 
     initializer "memory_tracker.add_middleware" do |app|
       app.middleware.use MemoryTracker::Middleware
-      $memory_tracker_data = MemoryTracker::Data.new
     end
+
   end
 end
 
