@@ -1,5 +1,15 @@
 module MemoryTracker
-  module GcStat
+  class GcStat
+    attr_reader :stat
+
+    def initialize(rss, vsize)
+      @stat = GC.stat.merge({ :rss => rss, :vsize => vsize})
+    end
+
+    def logline
+      $stat.values.join ','
+    end
+
     def self.gcdiff(before, after)
       return {} unless (before && before[:total_allocated_object] && before[:total_freed_object])
       return {} unless (after && after[:total_allocated_object] && after[:total_freed_object])
@@ -18,6 +28,17 @@ module MemoryTracker
         diff[key] = a[key] - b[key]
       end
       diff
+    end
+  end
+
+  class GcStatDelta
+    attr_reader :stat
+
+    def initialize(before, after)
+      @stat = after.stat.inject({}) do |h, (k, v)|
+        h[k] = after.stat[k] - before.stat[k]
+        h
+      end
     end
   end
 end

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Philippe Le Rohellec"]
-  s.date = "2013-11-02"
+  s.date = "2013-11-03"
   s.description = "Collect and analyze memory usage data for each individual Rails action controller."
   s.email = "philippe@lerohellec.com"
   s.extra_rdoc_files = [
@@ -28,15 +28,19 @@ Gem::Specification.new do |s|
     "app/views/memory_tracker/dashboards/ca.html.erb",
     "app/views/memory_tracker/dashboards/index.html.erb",
     "config/routes.rb",
+    "docs/design.rb",
     "lib/memory_tracker.rb",
     "lib/memory_tracker/engine.rb",
     "lib/memory_tracker/gc_stat.rb",
+    "lib/memory_tracker/live_store.rb",
     "lib/memory_tracker/logger.rb",
     "lib/memory_tracker/memory_tracker.rb",
     "lib/memory_tracker/middleware.rb",
-    "lib/memory_tracker/request_stats.rb",
-    "lib/memory_tracker/stats_collector.rb",
-    "memory_tracker.gemspec"
+    "lib/memory_tracker/request.rb",
+    "memory_tracker.gemspec",
+    "spec/lib/live_store_spec.rb",
+    "spec/lib/request_spec.rb",
+    "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/plerohellec/memory_tracker"
   s.licenses = ["MIT"]
@@ -49,14 +53,14 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.8.0"])
+      s.add_development_dependency(%q<rspec>, ["~> 2.14.0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.8.7"])
       s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
     else
       s.add_dependency(%q<sys-proctable>, [">= 0"])
-      s.add_dependency(%q<rspec>, ["~> 2.8.0"])
+      s.add_dependency(%q<rspec>, ["~> 2.14.0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, ["~> 1.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.8.7"])
@@ -64,7 +68,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<sys-proctable>, [">= 0"])
-    s.add_dependency(%q<rspec>, ["~> 2.8.0"])
+    s.add_dependency(%q<rspec>, ["~> 2.14.0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, ["~> 1.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.8.7"])

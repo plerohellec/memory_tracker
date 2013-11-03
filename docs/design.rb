@@ -9,7 +9,7 @@ module MemoryTracker
     
     def initialize
       @gcstat_logger = ActiveSupport::CustomLogger.new(GCSTAT_LOGFILE)
-      
+      @livestore = LiveStore::Manager.new
     end
     
     def start_request(env)
@@ -24,14 +24,14 @@ module MemoryTracker
   end
   
   class Request
-    attr_reader :controller, :action, :gcstat_increment
+    attr_reader :controller, :action, :gcstat_delta
     def initialize(env)
       @start_gcstat = GcStat.new(rss, vsize)
     end
     
     def close
       @end_gcstat = GcStat.new(rss, vsize)
-      @gcstat_increment = GcStatIncrement.new(@start_gcstat, @end_gcstat)
+      @gcstat_delta = GcStatDelta.new(@start_gcstat, @end_gcstat)
     end
     
     def logline
@@ -45,7 +45,7 @@ module MemoryTracker
     end
   end
   
-  class GcStatIncrement
+  class GcStatDelta
     def initialize(before, after)
       @stat = after.inject({}) do |h, (k, v)|
         h[k] = after[k] - before [k]
@@ -95,19 +95,6 @@ module MemoryTracker
     end
 
     def increment_action_counter(controller, action, key, value)
-      if @data[controller]
-        if @data[controller][action]
-          if @data[controller][action][key]
-            @data[controller][action][key] += value
-          else
-            @data[controller][action][key] = value
-          end
-        else
-          @data[controller][action] = { key => value }
-        end
-      else
-        @data[controller] = { action => { key => value } }
-      end
     end
   end
     

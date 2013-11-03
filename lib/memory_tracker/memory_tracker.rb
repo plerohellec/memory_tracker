@@ -1,32 +1,39 @@
 module MemoryTracker
   class MemoryTracker
     include Singleton
-    attr_reader :request_stats, :stats_collector, :logger
+    include Sys
+
+    attr_reader :request_stats, :livestore, :logger
+
+    GCSTAT_LOGFILE = "#{Rails.root}/log/gcstat.log"
 
     def initialize
       # Per process storage
-      @stats_collector = StatsCollector.new
+      @livestore = LiveStore::Manager.new
       # Per HTTP request storage
-      @request_stats = nil
+      @request = nil
       @logger = ::MemoryTracker::Logger.instance
+      @gcstat_logger = ActiveSupport::CustomLogger.new(GCSTAT_LOGFILE)
     end
 
     def start_request(env)
-      @request_stats = RequestStats.new(env)
+      @request = Request.new(env)
     end
 
     def end_request(status=nil)
-      return unless @request_stats
-      @request_stats.status = status
-      @request_stats.close
-      @stats_collector.push(@request_stats)
-      @logger.log(@request_stats)
-      @request_stats = nil
+      return unless @request
+      @request.close
+      @livestore.push(@request)
+
+      @logger.log(@request)
+      @gcstat_logger.info @request.end_gcstat.logline
+
+      @request = nil
     end
 
     def accumulated_stats
-      return unless @stats_collector
-      @stats_collector.data
+      return unless @livestore
+      @livestore.data
     end
 
     def self.track_block(name, &block)
@@ -34,8 +41,11 @@ module MemoryTracker
       before = GC.stat
       ret = yield
       after = GC.stat
-      @logger.log "gcstat diff for #{name}: #{GcStat.gcdiff(before, after)}"
+      Rails.logger.debug "gcstat diff for #{name}: #{GcStat.gcdiff(before, after)}"
       ret
     end
+
+    private
+
   end
 end
