@@ -1,7 +1,7 @@
 module MemoryTracker
   module LiveStore
     class Manager
-      def initialize(window_length = 5.minutes)
+      def initialize(window_length = 60*5)
         @length  = window_length
         @window1 = StatInterval.new(Time.now - @length/2, @length)
         @window2 = StatInterval.new(Time.now, @length)
@@ -29,16 +29,16 @@ module MemoryTracker
       attr_reader :start_time, :duration, :size
       attr_reader :data
 
-      def initialize(start_time, duration)
+      def initialize(start_time, duration_seconds)
         @start_time = start_time
-        @duration   = duration
+        @duration   = duration_seconds
         @size       = 0
         @data = {}
       end
 
       def push(request)
         @size += 1
-        delta = request.gcstat_delta
+        delta = request.gcstat_delta.stat
         delta.each do |key|
           increment_action_counter(request.controller, request.action, key, delta[key])
         end
