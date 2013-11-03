@@ -24,14 +24,14 @@ module MemoryTracker
   end
   
   class Request
-    attr_reader :controller, :action
+    attr_reader :controller, :action, :gcstat_increment
     def initialize(env)
       @start_gcstat = GcStat.new(rss, vsize)
     end
     
     def close
       @end_gcstat = GcStat.new(rss, vsize)
-      @stats = GcStatIncrement.new(@start_gcstat, @end_gcstat)
+      @gcstat_increment = GcStatIncrement.new(@start_gcstat, @end_gcstat)
     end
     
     def logline
@@ -39,25 +39,28 @@ module MemoryTracker
   end
   
   class GcStat
+    attr_reader :stat
     def initialize(rss, vsize)
-      @rss  = rss
-      @vsize = vsize
-      @stat = GC.stat
+      @stat = GC.stat.merge({ :rss => rss, :vsize => vsize})
     end
   end
   
   class GcStatIncrement
-    def initialize(controller, action, before, after)
+    def initialize(before, after)
+      @stat = after.inject({}) do |h, (k, v)|
+        h[k] = after[k] - before [k]
+        h
+      end
     end
   end
   
   class LiveStore::Manager
     def initialize(window_length)
-      @window1 = Window.new(Time.now - length/2)
-      @window2 = Window.new(Time.now)
+      @window1 = StatInterval.new(Time.now - length/2)
+      @window2 = StatInterval.new(Time.now)
     end
     
-    def reset_windows
+    def rotate_windows
       if @window1.start_time + length > Time.now
         @window1 = @window2
         @window2 = Window.new(Time.now)
@@ -65,7 +68,7 @@ module MemoryTracker
     end
         
     def push
-      reset_windows
+      rotate_windows
       @window1.push(request)
       @window2.push(request)
     end
@@ -75,26 +78,37 @@ module MemoryTracker
     end
   end
   
-  class LiveStore::Window
+  class LiveStore::StatInterval
     attr_reader :start_time, :duration, :size
     attr_accessor :data # {}
-    
+
     def initialize
       @data = {}
     end
     
     def push(request)
       @size += 1
-      @stats += request.gcstat
+      delta = request.gcstat_increment
+      delta.each do |key|
+        increment_action_counter(request.controller, request.action, key, delta[key])
+      end
     end
-  end
-    
-  class LiveStore::Stat
-    def initialize
+
+    def increment_action_counter(controller, action, key, value)
+      if @data[controller]
+        if @data[controller][action]
+          if @data[controller][action][key]
+            @data[controller][action][key] += value
+          else
+            @data[controller][action][key] = value
+          end
+        else
+          @data[controller][action] = { key => value }
+        end
+      else
+        @data[controller] = { action => { key => value } }
+      end
     end
-    
-    def <<(request)
-      
   end
     
 end
