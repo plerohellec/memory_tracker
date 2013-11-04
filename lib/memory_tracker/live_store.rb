@@ -47,6 +47,8 @@ module MemoryTracker
     end
 
     class Stats
+      include Enumerable
+
       def initialize
         @data = {}
       end
@@ -60,6 +62,14 @@ module MemoryTracker
           end
         end
         0
+      end
+
+      def each(&block)
+        @data.each do |controller, h|
+          h.each do |action, stats|
+            yield [controller, action, stats]
+          end
+        end
       end
 
       def increment_action_counter(controller, action, key, value)

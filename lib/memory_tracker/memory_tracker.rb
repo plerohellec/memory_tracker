@@ -31,9 +31,9 @@ module MemoryTracker
       @request = nil
     end
 
-    def accumulated_stats
+    def live_stats
       return unless @livestore
-      @livestore.data
+      @livestore.stats
     end
 
     def self.track_block(name, &block)

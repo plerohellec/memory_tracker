@@ -5,10 +5,10 @@ class MemoryTracker::DashboardsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        render :json => MemoryTracker::MemoryTracker.instance.accumulated_stats.to_json
+        render :json => MemoryTracker::MemoryTracker.instance.live_stats.to_json
       end
       format.html do
-        @data = MemoryTracker::MemoryTracker.instance.accumulated_stats
+        @data = MemoryTracker::MemoryTracker.instance.live_stats
         @sorted_cas = @data
         render
       end
@@ -18,7 +18,7 @@ class MemoryTracker::DashboardsController < ApplicationController
 
   def ca
     ca = params[:ca]
-    @data = MemoryTracker::MemoryTracker.instance.accumulated_stats
+    @data = MemoryTracker::MemoryTracker.instance.live_stats
     @num = @data[ca][:num]
   end
 end
