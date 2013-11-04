@@ -3,7 +3,7 @@ require 'spec_helper'
 module MemoryTracker
   describe Request do
     before :all do
-      @request = MemoryTracker::Request.new({})
+      @request = Request.new({})
     end
 
     it 'should initalize start_gcstat' do

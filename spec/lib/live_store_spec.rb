@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-def sample_stats
-  {
+def sample_stats(factor=1)
+  base = {
       :rss                      => 1,
       :vsize                    => 2,
       :count                    => 4,
@@ -14,13 +14,14 @@ def sample_stats
       :total_allocated_object    =>68540,
       :total_freed_object        =>33772
     }
+  sample = {}
+  base.each { |k,v| sample[k] = v * factor }
+  sample
 end
 
 def stub_gcstat_delta(request, controller, action, factor=1)
   request.stub(:request) { {:controller => controller, :action => action} }
-  sample = {}
-  sample_stats.each { |k,v| sample[k] = v * factor }
-  ::MemoryTracker::GcStatDelta.any_instance.stub(:stats) { sample }
+  ::MemoryTracker::GcStatDelta.any_instance.stub(:stats) { sample_stats(factor) }
 end
 
 module MemoryTracker
@@ -33,15 +34,15 @@ module MemoryTracker
       it 'should return stats from older window' do
         Time.stub(:now).and_return(start_time)
         manager = Manager.new(60)
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         stub_gcstat_delta(request, 'Boat', 'sail')
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 10)
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         stub_gcstat_delta(request, 'Car', 'drive', 2)
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 40)
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         stub_gcstat_delta(request, 'Boat', 'sail', 3)
         manager.push(request.close)
 
@@ -53,15 +54,15 @@ module MemoryTracker
       it 'should rotate windows' do
         Time.stub(:now).and_return(start_time)
         manager = Manager.new(60)
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         stub_gcstat_delta(request, 'Boat', 'sail')
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 10)
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         stub_gcstat_delta(request, 'Car', 'drive', 2)
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 40)
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         stub_gcstat_delta(request, 'Boat', 'sail', 3)
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 70)
@@ -79,7 +80,7 @@ module MemoryTracker
       end
 
       it 'should accept requests' do
-        request = MemoryTracker::Request.new({})
+        request = Request.new({})
         request.stub(:request).and_return({ :controller => :Foo, :action => :bar})
         request.close
         request.controller.should == :Foo
@@ -88,7 +89,7 @@ module MemoryTracker
       end
 
       it 'should accumulate one request' do
-        req1 = MemoryTracker::Request.new({})
+        req1 = Request.new({})
         req1.close
         stub_gcstat_delta(req1, 'Boat', 'sail')
         @interval.push(req1)
@@ -97,19 +98,19 @@ module MemoryTracker
       end
 
       it 'should accumulate several requests' do
-        req1 = MemoryTracker::Request.new({})
+        req1 = Request.new({})
         req1.close
         stub_gcstat_delta(req1, 'Boat', 'sail')
         @interval.push(req1)
-        req2 = MemoryTracker::Request.new({})
+        req2 = Request.new({})
         req2.close
         stub_gcstat_delta(req2, 'Boat', 'sail', 2)
         @interval.push(req2)
-        req3 = MemoryTracker::Request.new({})
+        req3 = Request.new({})
         req3.close
         stub_gcstat_delta(req3, 'Boat', 'moor', 5)
         @interval.push(req3)
-        req4 = MemoryTracker::Request.new({})
+        req4 = Request.new({})
         req4.close
         stub_gcstat_delta(req4, 'Car', 'drive', 1)
         @interval.push(req4)
@@ -121,6 +122,21 @@ module MemoryTracker
         stats.fetch('Boat', 'moor', :count).should == 20
         stats.fetch('Car', 'drive', :rss).should   == 1
         stats.fetch('Car', 'drive', :count).should == 4
+      end
+
+      it 'should be enumerable' do
+        req1 = Request.new({})
+        req1.close
+        stub_gcstat_delta(req1, 'Boat', 'sail')
+        @interval.push(req1)
+        req2 = Request.new({})
+        req2.close
+        stub_gcstat_delta(req2, 'Boat', 'moor')
+        @interval.push(req2)
+
+        @interval.size.should == 2
+        @interval.to_a.should include(['Boat', 'sail', sample_stats])
+        @interval.to_a.should include(['Boat', 'moor', sample_stats])
       end
     end
   end

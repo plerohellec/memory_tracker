@@ -30,6 +30,11 @@ module MemoryTracker
     class StatInterval
       attr_reader :start_time, :duration, :size, :stats
 
+      extend Forwardable
+      def_delegators :@stats, :fetch, :each
+
+      include Enumerable
+
       def initialize(start_time, duration_seconds)
         @start_time = start_time
         @duration   = duration_seconds
@@ -47,8 +52,6 @@ module MemoryTracker
     end
 
     class Stats
-      include Enumerable
-
       def initialize
         @data = {}
       end
