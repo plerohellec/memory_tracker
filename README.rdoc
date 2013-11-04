@@ -1,4 +1,4 @@
-= memory_tracker
+= MemoryTracker
 
 MemoryTracker collects and analyzes memory usage data for each controller action of a Rails application.
 

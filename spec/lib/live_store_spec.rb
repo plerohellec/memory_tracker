@@ -21,7 +21,7 @@ end
 
 def stub_gcstat_delta(request, controller, action, factor=1)
   request.stub(:request) { {:controller => controller, :action => action} }
-  ::MemoryTracker::GcStatDelta.any_instance.stub(:stats) { sample_stats(factor) }
+  MemoryTracker::GcStatDelta.any_instance.stub(:stats) { sample_stats(factor) }
 end
 
 module MemoryTracker
