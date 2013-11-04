@@ -7,44 +7,61 @@ module MemoryTracker
         @window2 = StatInterval.new(Time.now, @length)
       end
 
-      def rotate_windows
-        if @window1.start_time + length > Time.now
-          @window1 = @window2
-          @window2 = StatInterval.new(Time.now, @length)
-        end
-      end
-
-      def push
+      def push(request)
         rotate_windows
         @window1.push(request)
         @window2.push(request)
       end
 
       def stats
+        rotate_windows
         @window1.stats
+      end
+
+      private
+      def rotate_windows
+        if Time.now > @window1.start_time + @length
+          @window1 = @window2
+          @window2 = StatInterval.new(Time.now, @length)
+        end
       end
     end
 
     class StatInterval
-      attr_reader :start_time, :duration, :size
-      attr_reader :data
+      attr_reader :start_time, :duration, :size, :stats
 
       def initialize(start_time, duration_seconds)
         @start_time = start_time
         @duration   = duration_seconds
         @size       = 0
-        @data = {}
+        @stats = Stats.new
       end
 
       def push(request)
         @size += 1
-        delta = request.gcstat_delta.stat
-        delta.each do |key|
-          increment_action_counter(request.controller, request.action, key, delta[key])
+        delta = request.gcstat_delta.stats
+        delta.each_key do |key|
+          @stats.increment_action_counter(request.controller, request.action, key, delta[key])
         end
       end
+    end
 
-      private
+    class Stats
+      def initialize
+        @data = {}
+      end
+
+      def fetch(controller, action, key)
+        if @data[controller]
+          if @data[controller][action]
+            if @data[controller][action][key]
+              return @data[controller][action][key]
+            end
+          end
+        end
+        0
+      end
+
       def increment_action_counter(controller, action, key, value)
         if @data[controller]
           if @data[controller][action]

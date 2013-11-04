@@ -7,12 +7,13 @@ module MemoryTracker
 
     def initialize(env)
       @env         = env
-      @start_gcstat = GcStat.new(rss, vsize)
+      @start_gcstat = GcStat.new(self.class.rss, self.class.vsize)
     end
 
     def close
-      @end_gcstat   = GcStat.new(rss, vsize)
+      @end_gcstat   = GcStat.new(self.class.rss, self.class.vsize)
       @gcstat_delta = GcStatDelta.new(@start_gcstat, @end_gcstat)
+      self
     end
 
     def controller
@@ -35,11 +36,11 @@ module MemoryTracker
       @request = Rails.application.routes.recognize_path(env['REQUEST_URI'], routes_env)
     end
 
-    def rss
+    def self.rss
       rss = ProcTable.ps(Process.pid).rss * 0.004096
     end
 
-    def vsize
+    def self.vsize
       vsize = ProcTable.ps(Process.pid).vsize * 0.000001
     end
   end

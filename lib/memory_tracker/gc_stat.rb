@@ -1,13 +1,13 @@
 module MemoryTracker
   class GcStat
-    attr_reader :stat
+    attr_reader :stats
 
     def initialize(rss, vsize)
-      @stat = GC.stat.merge({ :rss => rss, :vsize => vsize})
+      @stats = GC.stat.merge({ :rss => rss, :vsize => vsize})
     end
 
     def logline
-      $stat.values.join ','
+      @stats.values.join ','
     end
 
     def self.gcdiff(before, after)
@@ -32,11 +32,11 @@ module MemoryTracker
   end
 
   class GcStatDelta
-    attr_reader :stat
+    attr_reader :stats
 
     def initialize(before, after)
-      @stat = after.stat.inject({}) do |h, (k, v)|
-        h[k] = after.stat[k] - before.stat[k]
+      @stats = after.stats.inject({}) do |h, (k, v)|
+        h[k] = after.stats[k] - before.stats[k]
         h
       end
     end
