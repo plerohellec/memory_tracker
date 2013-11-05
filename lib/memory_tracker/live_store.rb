@@ -85,41 +85,33 @@ module MemoryTracker
       end
 
       def increment_action_count(controller, action)
-        if @data[controller]
-          if @data[controller][action]
-            if @data[controller][action][:num]
-              @data[controller][action][:num] += 1
-            else
-              @data[controller][action][:num] = 1
-            end
-          else
-            @data[controller][action] = { :num => 1}
-          end
-        else
-          @data[controller] = { action => { :num => 1} }
-        end
+        ca = controller_action_data(controller, action)
+        ca[:num] += 1
       end
 
       def increment_action_attribute(controller, action, attr, value)
-        if @data[controller]
-          if @data[controller][action]
-            if @data[controller][action][:gcstat]
-              if @data[controller][action][:gcstat][attr]
-                @data[controller][action][:gcstat][attr] += value
-              else
-                @data[controller][action][:gcstat][attr] = value
-              end
-            else
-              @data[controller][action][:gcstat]  = { attr => value }
-            end
-          else
-            @data[controller][action] = { :gcstat => { attr => value } }
-          end
+        ca = controller_action_data(controller, action)
+        if ca[:gcstat][attr]
+          ca[:gcstat][attr] += value
         else
-          @data[controller] = { action => { :gcstat => { attr => value } } }
+          ca[:gcstat][attr] = value
         end
       end
 
+      private
+
+      def controller_action_data(controller, action)
+        if @data[controller]
+          if @data[controller][action]
+            @data[controller][action]
+          else
+            @data[controller][action] = { :num => 0, :gcstat => {} }
+          end
+        else
+          @data[controller] = { action => { :num => 0, :gcstat => {} } }
+        end
+        @data[controller][action]
+      end
 
     end
   end
