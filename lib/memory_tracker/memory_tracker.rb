@@ -3,7 +3,7 @@ module MemoryTracker
     include Singleton
     include Sys
 
-    attr_reader   :request_stats, :livestore, :logger
+    attr_reader   :request_stats, :livestore
     attr_accessor :gcstat_logger
 
     def initialize
@@ -11,7 +11,6 @@ module MemoryTracker
       @livestore = LiveStore::Manager.new
       # Per HTTP request storage
       @request = nil
-      @logger = ::MemoryTracker::Logger.instance
     end
 
     def start_request(env)
@@ -23,7 +22,6 @@ module MemoryTracker
       @request.close
       @livestore.push(@request)
 
-      @logger.log(@request)
       gcstat_logger.info @request.end_gcstat.logline
 
       @request = nil

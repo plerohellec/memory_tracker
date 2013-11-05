@@ -2,8 +2,9 @@ require 'spec_helper'
 
 module MemoryTracker
   describe Request do
-    before :all do
-      @request = Request.new({})
+    before :each do
+      @env = double('env')
+      @request = Request.new(@env)
     end
 
     it 'should initalize start_gcstat' do
@@ -13,7 +14,8 @@ module MemoryTracker
     end
 
     it 'should have a controller' do
-      @request.stub(:request).and_return({ :controller => 'Foo', :action => :bar})
+      allow(@env).to receive(:controller) { 'Foo' }
+      allow(@env).to receive(:action)     { :bar }
       @request.controller.should == 'Foo'
       @request.action.should == :bar
     end

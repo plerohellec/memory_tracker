@@ -19,8 +19,9 @@ def sample_stats(factor=1)
   sample
 end
 
-def stub_gcstat_delta(request, controller, action, factor=1)
-  request.stub(:request) { {:controller => controller, :action => action} }
+def stub_gcstat_delta(controller, action, factor=1)
+  allow(@env).to receive(:controller) { controller }
+  allow(@env).to receive(:action)     { action }
   MemoryTracker::GcStatDelta.any_instance.stub(:stats) { sample_stats(factor) }
 end
 
@@ -31,19 +32,23 @@ module MemoryTracker
         Time.new(2013,01,01,0,0,0)
       end
 
+      before :each do
+        @env = double('env')
+      end
+
       it 'should return stats from older window' do
         Time.stub(:now).and_return(start_time)
         manager = Manager.new(60)
-        request = Request.new({})
-        stub_gcstat_delta(request, 'Boat', 'sail')
+        request = Request.new(@env)
+        stub_gcstat_delta('Boat', 'sail')
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 10)
-        request = Request.new({})
-        stub_gcstat_delta(request, 'Car', 'drive', 2)
+        request = Request.new(@env)
+        stub_gcstat_delta('Car', 'drive', 2)
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 40)
-        request = Request.new({})
-        stub_gcstat_delta(request, 'Boat', 'sail', 3)
+        request = Request.new(@env)
+        stub_gcstat_delta('Boat', 'sail', 3)
         manager.push(request.close)
 
         stats = manager.stats
@@ -54,16 +59,16 @@ module MemoryTracker
       it 'should rotate windows' do
         Time.stub(:now).and_return(start_time)
         manager = Manager.new(60)
-        request = Request.new({})
-        stub_gcstat_delta(request, 'Boat', 'sail')
+        request = Request.new(@env)
+        stub_gcstat_delta('Boat', 'sail')
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 10)
-        request = Request.new({})
-        stub_gcstat_delta(request, 'Car', 'drive', 2)
+        request = Request.new(@env)
+        stub_gcstat_delta('Car', 'drive', 2)
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 40)
-        request = Request.new({})
-        stub_gcstat_delta(request, 'Boat', 'sail', 3)
+        request = Request.new(@env)
+        stub_gcstat_delta('Boat', 'sail', 3)
         manager.push(request.close)
         Time.stub(:now).and_return(start_time + 70)
 
@@ -77,11 +82,14 @@ module MemoryTracker
 
       before :each do
         @interval = LiveStore::StatInterval.new(Time.now, 5*60)
+        @env = double('env')
       end
 
       it 'should accept requests' do
-        request = Request.new({})
-        request.stub(:request).and_return({ :controller => :Foo, :action => :bar})
+        env = double('env')
+        request = Request.new(env)
+        allow(env).to receive(:controller) { :Foo }
+        allow(env).to receive(:action)     { :bar }
         request.close
         request.controller.should == :Foo
         request.action.should == :bar
@@ -89,30 +97,30 @@ module MemoryTracker
       end
 
       it 'should accumulate one request' do
-        req1 = Request.new({})
+        req1 = Request.new(@env)
         req1.close
-        stub_gcstat_delta(req1, 'Boat', 'sail')
+        stub_gcstat_delta('Boat', 'sail')
         @interval.push(req1)
         @interval.stats.should be_a(Stats)
         @interval.stats.fetch('Boat', 'sail', :rss).should == 1
       end
 
       it 'should accumulate several requests' do
-        req1 = Request.new({})
+        req1 = Request.new(@env)
         req1.close
-        stub_gcstat_delta(req1, 'Boat', 'sail')
+        stub_gcstat_delta('Boat', 'sail')
         @interval.push(req1)
-        req2 = Request.new({})
+        req2 = Request.new(@env)
         req2.close
-        stub_gcstat_delta(req2, 'Boat', 'sail', 2)
+        stub_gcstat_delta('Boat', 'sail', 2)
         @interval.push(req2)
-        req3 = Request.new({})
+        req3 = Request.new(@env)
         req3.close
-        stub_gcstat_delta(req3, 'Boat', 'moor', 5)
+        stub_gcstat_delta('Boat', 'moor', 5)
         @interval.push(req3)
-        req4 = Request.new({})
+        req4 = Request.new(@env)
         req4.close
-        stub_gcstat_delta(req4, 'Car', 'drive', 1)
+        stub_gcstat_delta('Car', 'drive', 1)
         @interval.push(req4)
 
         stats = @interval.stats
@@ -125,13 +133,13 @@ module MemoryTracker
       end
 
       it 'should be enumerable' do
-        req1 = Request.new({})
+        req1 = Request.new(@env)
         req1.close
-        stub_gcstat_delta(req1, 'Boat', 'sail')
+        stub_gcstat_delta('Boat', 'sail')
         @interval.push(req1)
-        req2 = Request.new({})
+        req2 = Request.new(@env)
         req2.close
-        stub_gcstat_delta(req2, 'Boat', 'moor')
+        stub_gcstat_delta('Boat', 'moor')
         @interval.push(req2)
 
         @interval.size.should == 2
