@@ -87,7 +87,11 @@ module MemoryTracker
       def increment_action_count(controller, action)
         if @data[controller]
           if @data[controller][action]
-            @data[controller][action][:num] += 1
+            if @data[controller][action][:num]
+              @data[controller][action][:num] += 1
+            else
+              @data[controller][action][:num] = 1
+            end
           else
             @data[controller][action] = { :num => 1}
           end

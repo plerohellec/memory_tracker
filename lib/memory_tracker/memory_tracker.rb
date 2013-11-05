@@ -1,7 +1,6 @@
 module MemoryTracker
   class MemoryTracker
     include Singleton
-    include Sys
 
     attr_accessor :gcstat_logger, :store
 
@@ -20,7 +19,6 @@ module MemoryTracker
     end
 
     def stats
-      return unless store
       store.stats
     end
 
