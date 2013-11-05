@@ -92,18 +92,10 @@ module MemoryTracker
       private
 
       def controller_action_data(controller, action)
-        if @data[controller]
-          if @data[controller][action]
-            @data[controller][action]
-          else
-            @data[controller][action] = { :num => 0, :gcstat => {} }
-          end
-        else
-          @data[controller] = { action => { :num => 0, :gcstat => {} } }
-        end
+        @data[controller] = { action => { :num => 0, :gcstat => {} } } unless @data[controller]
+        @data[controller][action] = { :num => 0, :gcstat => {} }       unless @data[controller][action]
         @data[controller][action]
       end
-
     end
   end
 end

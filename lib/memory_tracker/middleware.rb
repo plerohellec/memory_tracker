@@ -1,5 +1,5 @@
 module MemoryTracker
-  # Middleware responsability is to initialize and close RequestStats
+  # Middleware responsability is to initialize and close request objects
   # object at start and end of HTTP query.
   class Middleware
     def initialize(app)
