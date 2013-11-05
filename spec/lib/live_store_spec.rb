@@ -74,7 +74,7 @@ module MemoryTracker
 
         stats = manager.stats
         stats.fetch('Boat', 'sail', :rss).should == 3
-        stats.fetch('Car', 'drive', :rss).should == 0
+        stats.fetch('Car', 'drive', :rss).should be_nil
       end
     end
 
@@ -124,10 +124,13 @@ module MemoryTracker
         @interval.push(req4)
 
         stats = @interval.stats
+        stats.count('Boat', 'sail').should == 2
         stats.fetch('Boat', 'sail', :rss).should   == 3
         stats.fetch('Boat', 'sail', :count).should == 12
+        stats.count('Boat', 'moor').should == 1
         stats.fetch('Boat', 'moor', :rss).should   == 5
         stats.fetch('Boat', 'moor', :count).should == 20
+        stats.count('Car', 'drive').should == 1
         stats.fetch('Car', 'drive', :rss).should   == 1
         stats.fetch('Car', 'drive', :count).should == 4
       end
@@ -143,8 +146,8 @@ module MemoryTracker
         @interval.push(req2)
 
         @interval.size.should == 2
-        @interval.to_a.should include(['Boat', 'sail', sample_stats])
-        @interval.to_a.should include(['Boat', 'moor', sample_stats])
+        @interval.to_a.should include(['Boat', 'sail', { :num => 1, :gcstat => sample_stats} ])
+        @interval.to_a.should include(['Boat', 'moor', { :num => 1, :gcstat => sample_stats} ])
       end
     end
   end

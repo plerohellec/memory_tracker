@@ -4,8 +4,12 @@ module MemoryTracker
   describe MemoryTracker do
     before :each do
       @env = double('env')
-      allow(@env).to receive(:controller)
-      allow(@env).to receive(:action)
+      allow(@env).to receive(:controller) { 'Boat' }
+      allow(@env).to receive(:action)     { 'sail' }
+
+      @gcstat_logger = double('gcstat_logger')
+      @store         = double('store')
+      @tracker = MemoryTracker.instance
     end
 
     it 'should be a singleton' do
@@ -13,16 +17,29 @@ module MemoryTracker
     end
 
     it 'should log gcstat to gcstat_logger' do
-      tracker = MemoryTracker.instance
-      gcstat_logger = double('gcstat_logger')
-      tracker.gcstat_logger = gcstat_logger
-      expect(gcstat_logger).to receive(:info)
+      @tracker.gcstat_logger = @gcstat_logger
+      @tracker.store         = @store
+      expect(@gcstat_logger).to receive(:info)
+      expect(@store).to          receive(:push)
 
-      tracker.start_request(@env)
-      tracker.end_request
+      @tracker.start_request(@env)
+      @tracker.end_request
     end
 
     it 'should populate livestore' do
+      @tracker.gcstat_logger = @gcstat_logger
+      @tracker.store         = LiveStore::Manager.new
+      allow(@gcstat_logger).to receive(:info)
+
+      Request.stub(:rss) { 100 }
+      @tracker.start_request(@env)
+      Request.stub(:rss) { 108 }
+      @tracker.end_request
+
+      stats = @tracker.stats
+      stats.count('Boat', 'sail').should == 1
+      stats.count('Boat', 'moor').should == 0
+      stats.fetch('Boat', 'sail', :rss).should == 8
     end
   end
 end

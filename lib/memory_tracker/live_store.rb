@@ -45,8 +45,9 @@ module MemoryTracker
       def push(request)
         @size += 1
         delta = request.gcstat_delta.stats
-        delta.each_key do |key|
-          @stats.increment_action_counter(request.controller, request.action, key, delta[key])
+        @stats.increment_action_count(request.controller, request.action)
+        delta.each_key do |attr|
+          @stats.increment_action_attribute(request.controller, request.action, attr, delta[attr])
         end
       end
     end
@@ -56,12 +57,20 @@ module MemoryTracker
         @data = {}
       end
 
-      def fetch(controller, action, key)
+      def fetch(controller, action, attr)
         if @data[controller]
           if @data[controller][action]
-            if @data[controller][action][key]
-              return @data[controller][action][key]
+            if @data[controller][action][:gcstat][attr]
+              return @data[controller][action][:gcstat][attr]
             end
+          end
+        end
+      end
+
+      def count(controller, action)
+        if @data[controller]
+          if @data[controller][action]
+            return @data[controller][action][:num]
           end
         end
         0
@@ -75,21 +84,39 @@ module MemoryTracker
         end
       end
 
-      def increment_action_counter(controller, action, key, value)
+      def increment_action_count(controller, action)
         if @data[controller]
           if @data[controller][action]
-            if @data[controller][action][key]
-              @data[controller][action][key] += value
-            else
-              @data[controller][action][key] = value
-            end
+            @data[controller][action][:num] += 1
           else
-            @data[controller][action] = { key => value }
+            @data[controller][action] = { :num => 1}
           end
         else
-          @data[controller] = { action => { key => value } }
+          @data[controller] = { action => { :num => 1} }
         end
       end
+
+      def increment_action_attribute(controller, action, attr, value)
+        if @data[controller]
+          if @data[controller][action]
+            if @data[controller][action][:gcstat]
+              if @data[controller][action][:gcstat][attr]
+                @data[controller][action][:gcstat][attr] += value
+              else
+                @data[controller][action][:gcstat][attr] = value
+              end
+            else
+              @data[controller][action][:gcstat]  = { attr => value }
+            end
+          else
+            @data[controller][action] = { :gcstat => { attr => value } }
+          end
+        else
+          @data[controller] = { action => { :gcstat => { attr => value } } }
+        end
+      end
+
+
     end
   end
 end
