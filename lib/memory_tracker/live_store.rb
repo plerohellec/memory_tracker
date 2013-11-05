@@ -58,22 +58,13 @@ module MemoryTracker
       end
 
       def fetch(controller, action, attr)
-        if @data[controller]
-          if @data[controller][action]
-            if @data[controller][action][:gcstat][attr]
-              return @data[controller][action][:gcstat][attr]
-            end
-          end
-        end
+        ca = controller_action_data(controller, action)
+        ca[:gcstat][attr]
       end
 
       def count(controller, action)
-        if @data[controller]
-          if @data[controller][action]
-            return @data[controller][action][:num]
-          end
-        end
-        0
+        ca = controller_action_data(controller, action)
+        ca[:num]
       end
 
       def each(&block)
