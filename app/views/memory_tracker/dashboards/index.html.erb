@@ -3,11 +3,12 @@
     <th>Controller Action</th>
     <th>Calls</th>
   </tr>
-  <% @sorted_cas.each_key do |ca| %>
-    <% num = @data[ca][:num] %>
+  <% @data.each do |controller, action, stats| %>
+    <% num = stats[:num] %>
     <tr>
-      <td><%= link_to ca, memory_tracker_ca_path(URI::escape(ca)) %></td>
+      <td><%= "#{controller}##{action}" %></td>
       <td><%= num %></td>
+      <td><%= stats[:gcstat].inspect %></td>
     </tr>
   <% end %>
 </table>
