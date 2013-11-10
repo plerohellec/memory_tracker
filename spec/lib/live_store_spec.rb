@@ -35,6 +35,11 @@ module MemoryTracker
       before :each do
         @env = double('env')
       end
+      
+      it 'should respond to name' do
+        manager = Manager.new(60)
+        manager.should respond_to(:name)
+      end
 
       it 'should return stats from older window' do
         Time.stub(:now).and_return(start_time)

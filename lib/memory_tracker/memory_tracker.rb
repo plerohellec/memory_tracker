@@ -1,9 +1,18 @@
 module MemoryTracker
   class MemoryTracker
     include Singleton
+    include Enumerable
 
-    attr_accessor :gcstat_logger, :store
-
+    attr_accessor :gcstat_logger
+    
+    def stores
+      @stores ||= {}
+    end
+    
+    def add_store(store)
+      stores[store.name] = store
+    end
+    
     def start_request(env)
       @request = Request.new(env)
     end
@@ -11,15 +20,15 @@ module MemoryTracker
     def end_request
       return unless @request
       @request.close
-      store.push(@request)
+      stores.each { |name, store| store.push(@request) }
 
       gcstat_logger.info @request.end_gcstat.logline
 
       @request = nil
     end
 
-    def stats
-      store.stats
+    def stats(store_name)
+      stores[store_name].stats
     end
 
     def self.track_block(*args)
@@ -36,6 +45,14 @@ module MemoryTracker
     end
 
     private
+    
+    def each_store
+      stores.each { |store| yield store }
+    end
+    
+    def each
+      each_store
+    end
 
   end
 end

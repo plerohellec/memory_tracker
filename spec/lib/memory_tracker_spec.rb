@@ -18,7 +18,7 @@ module MemoryTracker
 
     it 'should log gcstat to gcstat_logger' do
       @tracker.gcstat_logger = @gcstat_logger
-      @tracker.store         = @store
+      @tracker.stores[:live] = @store
       expect(@gcstat_logger).to receive(:info)
       expect(@store).to          receive(:push)
 
@@ -28,7 +28,7 @@ module MemoryTracker
 
     it 'should populate livestore' do
       @tracker.gcstat_logger = @gcstat_logger
-      @tracker.store         = LiveStore::Manager.new
+      @tracker.stores[:live] = LiveStore::Manager.new
       allow(@gcstat_logger).to receive(:info)
 
       Request.stub(:rss) { 100 }
@@ -36,7 +36,7 @@ module MemoryTracker
       Request.stub(:rss) { 108 }
       @tracker.end_request
 
-      stats = @tracker.stats
+      stats = @tracker.stats(:live)
       stats.count('Boat', 'sail').should == 1
       stats.count('Boat', 'moor').should == 0
       stats.fetch('Boat', 'sail', :rss).should == 8

@@ -2,14 +2,23 @@ module MemoryTracker
   class Middleware
   end
   
+  class Engine
+    def initialize_stores
+      MemoryTracker.instance.add_store(LiveStore.new)
+      MemoryTracker.instance.add_store(LogfileStore.new)
+    end
+  end
+  
   class MemoryTracker
     GCSTAT_LOGFILE = "#{Rails.root}/log/gcstat.log"
     
     include Singleton
     
-    def initialize
-      @gcstat_logger = ActiveSupport::CustomLogger.new(GCSTAT_LOGFILE)
-      @livestore = LiveStore::Manager.new
+    def stores
+      @stores ||= {}
+    end
+    
+    def add_stores
     end
     
     def start_request(env)
@@ -18,8 +27,7 @@ module MemoryTracker
     
     def end_request(status)
       @request.close
-      @gcstat_logger.info @request.logline
-      LiveStoreManager.push(@request)
+      stores.each { |store| store.push(@request) }
     end
   end
   

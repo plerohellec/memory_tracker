@@ -6,6 +6,10 @@ module MemoryTracker
         @window1 = StatInterval.new(Time.now - @length/2, @length)
         @window2 = StatInterval.new(Time.now, @length)
       end
+      
+      def name
+        :live
+      end
 
       def push(request)
         rotate_windows
