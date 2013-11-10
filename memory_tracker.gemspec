@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Philippe Le Rohellec"]
-  s.date = "2013-11-03"
+  s.date = "2013-11-10"
   s.description = "Collect and analyze memory usage data for each individual Rails action controller."
   s.email = "philippe@lerohellec.com"
   s.extra_rdoc_files = [
@@ -31,14 +31,15 @@ Gem::Specification.new do |s|
     "docs/design.rb",
     "lib/memory_tracker.rb",
     "lib/memory_tracker/engine.rb",
+    "lib/memory_tracker/env.rb",
     "lib/memory_tracker/gc_stat.rb",
     "lib/memory_tracker/live_store.rb",
-    "lib/memory_tracker/logger.rb",
     "lib/memory_tracker/memory_tracker.rb",
     "lib/memory_tracker/middleware.rb",
     "lib/memory_tracker/request.rb",
     "memory_tracker.gemspec",
     "spec/lib/live_store_spec.rb",
+    "spec/lib/memory_tracker_spec.rb",
     "spec/lib/request_spec.rb",
     "spec/spec_helper.rb"
   ]

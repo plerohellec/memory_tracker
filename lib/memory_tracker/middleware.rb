@@ -14,7 +14,7 @@ module MemoryTracker
       memory_tracker.start_request(Env.new(env))
       status, headers, body = @app.call(env)
     ensure
-      memory_tracker.end_request(status)
+      memory_tracker.end_request
     end
   end  
 end
