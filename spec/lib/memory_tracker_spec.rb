@@ -28,7 +28,7 @@ module MemoryTracker
 
     it 'should populate livestore' do
       @tracker.gcstat_logger = @gcstat_logger
-      @tracker.stores[:live] = LiveStore::Manager.new
+      @tracker.stores[:live] = Stores::InMemoryStore::Manager.new
       allow(@gcstat_logger).to receive(:info)
 
       Request.stub(:rss) { 100 }

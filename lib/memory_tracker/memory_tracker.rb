@@ -53,6 +53,5 @@ module MemoryTracker
     def each
       each_store
     end
-
   end
 end

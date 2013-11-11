@@ -4,7 +4,7 @@ module MemoryTracker
   
   class Engine
     def initialize_stores
-      MemoryTracker.instance.add_store(LiveStore.new)
+      MemoryTracker.instance.add_store(InMemoryStore.new)
       MemoryTracker.instance.add_store(LogfileStore.new)
     end
   end
@@ -62,48 +62,49 @@ module MemoryTracker
     end
   end
   
-  class LiveStore::Manager
-    def initialize(window_length)
-      @window1 = StatInterval.new(Time.now - length/2)
-      @window2 = StatInterval.new(Time.now)
-    end
-    
-    def rotate_windows
-      if @window1.start_time + length > Time.now
-        @window1 = @window2
-        @window2 = Window.new(Time.now)
+  module Stores
+    class InMemoryStore::Manager
+      def initialize(window_length)
+        @window1 = StatInterval.new(Time.now - length/2)
+        @window2 = StatInterval.new(Time.now)
       end
-    end
-        
-    def push
-      rotate_windows
-      @window1.push(request)
-      @window2.push(request)
-    end
-    
-    def stats
-      @window1.stats
-    end
-  end
-  
-  class LiveStore::StatInterval
-    attr_reader :start_time, :duration, :size
-    attr_accessor :data # {}
 
-    def initialize
-      @data = {}
-    end
-    
-    def push(request)
-      @size += 1
-      delta = request.gcstat_increment
-      delta.each do |key|
-        increment_action_counter(request.controller, request.action, key, delta[key])
+      def rotate_windows
+        if @window1.start_time + length > Time.now
+          @window1 = @window2
+          @window2 = Window.new(Time.now)
+        end
+      end
+
+      def push
+        rotate_windows
+        @window1.push(request)
+        @window2.push(request)
+      end
+
+      def stats
+        @window1.stats
       end
     end
 
-    def increment_action_counter(controller, action, key, value)
+    class InMemoryStore::StatInterval
+      attr_reader :start_time, :duration, :size
+      attr_accessor :data # {}
+
+      def initialize
+        @data = {}
+      end
+
+      def push(request)
+        @size += 1
+        delta = request.gcstat_increment
+        delta.each do |key|
+          increment_action_counter(request.controller, request.action, key, delta[key])
+        end
+      end
+
+      def increment_action_counter(controller, action, key, value)
+      end
     end
   end
-    
 end
