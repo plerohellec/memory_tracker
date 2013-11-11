@@ -13,10 +13,8 @@
       <td><%= "#{controller}##{action}" %></td>
       <td><%= num %></td>
       <% keys.each do |key| %>
-        <td><%= '%.3f' % (stats[:gcstat][key]/num) %></td>
+        <td><%= '%.3f' % (stats[:gcstat][key].to_f/num) %></td>
       <% end %>
     </tr>
   <% end %>
 </table>
-
-<br/>

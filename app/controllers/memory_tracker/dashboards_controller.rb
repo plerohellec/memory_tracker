@@ -13,11 +13,4 @@ class MemoryTracker::DashboardsController < ApplicationController
       end
     end
   end
-
-
-  def ca
-    ca = params[:ca]
-    @data = MemoryTracker::MemoryTracker.instance.live_stats
-    @num = @data[ca][:num]
-  end
 end
