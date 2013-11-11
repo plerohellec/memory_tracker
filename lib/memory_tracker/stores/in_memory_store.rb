@@ -9,7 +9,7 @@ module MemoryTracker
         end
 
         def name
-          :live
+          :memory
         end
 
         def push(request)

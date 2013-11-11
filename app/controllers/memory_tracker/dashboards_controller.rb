@@ -3,7 +3,7 @@ class MemoryTracker::DashboardsController < ApplicationController
   layout 'memory_tracker'
   
   def index
-    @data = MemoryTracker::MemoryTracker.instance.stats(:live)
+    @data = MemoryTracker::MemoryTracker.instance.stats(:memory)
     respond_to do |format|
       format.json do
         render :json => @data.to_json

@@ -18,7 +18,7 @@ module MemoryTracker
     end
 
     it 'should push requests to all stores' do
-      allow(@memory_store).to         receive(:name) { :live }
+      allow(@memory_store).to         receive(:name) { :memory }
       allow(@logfile_store).to        receive(:name) { :gcstat_logfile }
       expect(@memory_store).to         receive(:push)
       expect(@logfile_store).to        receive(:push)
@@ -38,7 +38,7 @@ module MemoryTracker
       Request.stub(:rss) { 108 }
       @tracker.end_request
 
-      stats = @tracker.stats(:live)
+      stats = @tracker.stats(:memory)
       stats.count('Boat', 'sail').should == 1
       stats.count('Boat', 'moor').should == 0
       stats.fetch('Boat', 'sail', :rss).should == 8
