@@ -6,6 +6,17 @@ module MemoryTracker
       @stats = GC.stat.merge({ :rss => rss, :vsize => vsize})
     end
 
+    def ordered_keys
+      @stats.keys.sort
+    end
+
+    def ordered_values
+      ordered_keys.inject([]) do |vals, key|
+        vals << @stats[key]
+        vals
+      end
+    end
+
     def self.gcdiff(before, after)
       return {} unless (before && before[:total_allocated_object] && before[:total_freed_object])
       return {} unless (after && after[:total_allocated_object] && after[:total_freed_object])
