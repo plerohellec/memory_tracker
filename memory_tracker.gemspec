@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Philippe Le Rohellec"]
-  s.date = "2013-11-10"
+  s.date = "2013-11-11"
   s.description = "Collect and analyze memory usage data for each individual Rails action controller."
   s.email = "philippe@lerohellec.com"
   s.extra_rdoc_files = [
@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
     "VERSION",
     "app/controllers/memory_tracker/dashboards_controller.rb",
     "app/views/layouts/memory_tracker.html.erb",
-    "app/views/memory_tracker/dashboards/ca.html.erb",
     "app/views/memory_tracker/dashboards/index.html.erb",
     "config/routes.rb",
     "docs/design.rb",
@@ -33,14 +32,16 @@ Gem::Specification.new do |s|
     "lib/memory_tracker/engine.rb",
     "lib/memory_tracker/env.rb",
     "lib/memory_tracker/gc_stat.rb",
-    "lib/memory_tracker/live_store.rb",
     "lib/memory_tracker/memory_tracker.rb",
     "lib/memory_tracker/middleware.rb",
     "lib/memory_tracker/request.rb",
+    "lib/memory_tracker/stores/gcstat_logfile_store.rb",
+    "lib/memory_tracker/stores/in_memory_store.rb",
     "memory_tracker.gemspec",
-    "spec/lib/live_store_spec.rb",
     "spec/lib/memory_tracker_spec.rb",
     "spec/lib/request_spec.rb",
+    "spec/lib/stores/gcstat_logfile_store_spec.rb",
+    "spec/lib/stores/in_memory_store_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/plerohellec/memory_tracker"
@@ -54,6 +55,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
+      s.add_development_dependency(%q<debugger>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.14.0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0"])
@@ -61,6 +63,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
     else
       s.add_dependency(%q<sys-proctable>, [">= 0"])
+      s.add_dependency(%q<debugger>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.14.0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, ["~> 1.0"])
@@ -69,6 +72,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<sys-proctable>, [">= 0"])
+    s.add_dependency(%q<debugger>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.14.0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, ["~> 1.0"])

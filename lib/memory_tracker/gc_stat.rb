@@ -6,10 +6,6 @@ module MemoryTracker
       @stats = GC.stat.merge({ :rss => rss, :vsize => vsize})
     end
 
-    def logline
-      @stats.values.join ','
-    end
-
     def self.gcdiff(before, after)
       return {} unless (before && before[:total_allocated_object] && before[:total_freed_object])
       return {} unless (after && after[:total_allocated_object] && after[:total_freed_object])

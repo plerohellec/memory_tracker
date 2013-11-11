@@ -14,7 +14,7 @@ module MemoryTracker
     end
 
     initializer "memory_tracker.setup_stores" do |app|
-      MemoryTracker.instance.gcstat_logger = ActiveSupport::BufferedLogger.new("#{Rails.root}/log/gcstat.log")
+      MemoryTracker.instance.add_store(Stores::GcstatLogfileStore.new(ActiveSupport::BufferedLogger, "#{Rails.root}/log/gcstat.log"))
       MemoryTracker.instance.add_store(Stores::InMemoryStore::Manager.new)
     end
   end

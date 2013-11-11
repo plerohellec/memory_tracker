@@ -22,8 +22,6 @@ module MemoryTracker
       @request.close
       stores.each { |name, store| store.push(@request) }
 
-      gcstat_logger.info @request.end_gcstat.logline
-
       @request = nil
     end
 
@@ -47,7 +45,7 @@ module MemoryTracker
     private
     
     def each_store
-      stores.each { |store| yield store }
+      stores.each
     end
     
     def each
