@@ -42,10 +42,22 @@ module MemoryTracker
     attr_reader :stats
 
     def initialize(before, after)
+      @after = after
       @stats = after.stats.inject({}) do |h, (k, v)|
         h[k] = after.stats[k] - before.stats[k]
         h
       end
+    end
+
+    def custom
+      return unless stats[:total_allocated_object] && stats[:total_freed_object]
+      h = {}
+      h[:total_allocated_object] = stats[:total_allocated_object]
+      h[:count] = stats[:count]
+      h[:rss] = stats[:rss]
+      h[:heap_used] = @after.stats[:heap_used]
+      h[:in_use]    = @after.stats[:total_allocated_object] - @after.stats[:total_freed_object]
+      h
     end
   end
 end

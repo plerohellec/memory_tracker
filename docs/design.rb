@@ -41,9 +41,6 @@ module MemoryTracker
       @end_gcstat = GcStat.new(rss, vsize)
       @gcstat_delta = GcStatDelta.new(@start_gcstat, @end_gcstat)
     end
-    
-    def logline
-    end
   end
   
   class GcStat
@@ -67,6 +64,10 @@ module MemoryTracker
       def initialize(window_length)
         @window1 = StatInterval.new(Time.now - length/2)
         @window2 = StatInterval.new(Time.now)
+      end
+
+      def name
+        :memory
       end
 
       def rotate_windows
@@ -97,7 +98,7 @@ module MemoryTracker
 
       def push(request)
         @size += 1
-        delta = request.gcstat_increment
+        delta = request.gcstat_delta
         delta.each do |key|
           increment_action_counter(request.controller, request.action, key, delta[key])
         end

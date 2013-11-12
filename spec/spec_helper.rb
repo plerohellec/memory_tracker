@@ -11,6 +11,7 @@ require 'memory_tracker/request'
 require 'memory_tracker/memory_tracker'
 require 'memory_tracker/stores/in_memory_store'
 require 'memory_tracker/stores/gcstat_logfile_store'
+require 'memory_tracker/stores/url_logfile_store'
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'

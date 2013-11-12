@@ -4,6 +4,7 @@ module MemoryTracker
 
     attr_reader :start_gcstat, :end_gcstat
     attr_reader :gcstat_delta
+    attr_reader :rss, :vsize
 
     extend Forwardable
     def_delegators :@env, :path, :controller, :action
