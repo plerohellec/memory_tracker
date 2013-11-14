@@ -1,19 +1,20 @@
 <% keys = [ :rss, :vsize, :count, :total_allocated_object, :heap_used ] %>
 <table width="100%">
   <tr>
-    <th>Controller Action</th>
+    <th>Controller</th>
+    <th>Action</th>
     <th>num</th>
     <% keys.each do |key| %>
       <th><%= key %></th>
     <% end %>
   </tr>
-  <% @data.each do |controller, action, stats| %>
-    <% num = stats[:num] %>
+  <% @data.each do |row| %>
     <tr>
-      <td><%= "#{controller}##{action}" %></td>
-      <td><%= num %></td>
+      <td><%= "#{row[:controller]}" %></td>
+      <td><%= "#{row[:action]}" %></td>
+      <td><%= row[:num] %></td>
       <% keys.each do |key| %>
-        <td><%= '%.3f' % (stats[:gcstat][key].to_f/num) %></td>
+        <td><%= '%.3f' % (row[key].to_f/row[:num]) %></td>
       <% end %>
     </tr>
   <% end %>

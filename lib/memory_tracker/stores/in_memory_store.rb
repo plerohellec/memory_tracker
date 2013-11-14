@@ -2,7 +2,7 @@ module MemoryTracker
   module Stores
     module InMemoryStore
       class Manager
-        def initialize(window_length = 60*5)
+        def initialize(window_length = 60*60*4)
           @length  = window_length
           @window1 = StatInterval.new(Time.now - @length/2, @length)
           @window2 = StatInterval.new(Time.now, @length)
@@ -92,6 +92,19 @@ module MemoryTracker
           else
             ca[:gcstat][attr] = value
           end
+        end
+
+
+        def to_a
+          a = []
+          @data.each do |controller, actions|
+            actions.each do |action, counters|
+              row = { :controller => controller, :action => action, :num => counters[:num] }
+              row.merge!(counters[:gcstat])
+              a << row
+            end
+          end
+          a
         end
 
         private
