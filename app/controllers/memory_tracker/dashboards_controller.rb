@@ -1,21 +1,23 @@
-class MemoryTracker::DashboardsController < ApplicationController
+module MemoryTracker
+  class DashboardsController <  ActionController::Base
 
-  layout 'memory_tracker'
-  
-  def index
-    stats = MemoryTracker::MemoryTracker.instance.stats(:memory)
-    @data = stats.to_a
-    sort_by = params[:sort_by] ? params[:sort_by].to_sym : :count
-    if @data.any? && @data.first.keys.include?(sort_by)
-      @data = @data.sort{ |a,b| b[sort_by].to_f/b[:num] <=> a[sort_by].to_f/a[:num] }
-    end
+    layout 'memory_tracker'
 
-    respond_to do |format|
-      format.json do
-        render :json => @data.to_json
+    def index
+      stats = MemoryTracker.instance.stats(:memory)
+      @data = stats.to_a
+      sort_by = params[:sort_by] ? params[:sort_by].to_sym : :count
+      if @data.any? && @data.first.keys.include?(sort_by)
+        @data = @data.sort{ |a,b| b[sort_by].to_f/b[:num] <=> a[sort_by].to_f/a[:num] }
       end
-      format.html do
-        render
+
+      respond_to do |format|
+        format.json do
+          render :json => @data.to_json
+        end
+        format.html do
+          render
+        end
       end
     end
   end

@@ -1,11 +1,11 @@
 <% keys = [ :rss, :vsize, :count, :total_allocated_object, :heap_used ] %>
 <table width="100%">
   <tr>
-    <th>Controller</th>
-    <th>Action</th>
-    <th>num</th>
+    <th><%= link_to_dashboards('Controller') %></th>
+    <th><%= link_to_dashboards('Action') %></th>
+    <th><%= link_to_dashboards('num') %></th>
     <% keys.each do |key| %>
-      <th><%= key %></th>
+      <th><%= link_to_dashboards(key) %></th>
     <% end %>
   </tr>
   <% @data.each do |row| %>
