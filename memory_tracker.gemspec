@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Philippe Le Rohellec"]
-  s.date = "2013-11-12"
+  s.date = "2013-11-15"
   s.description = "Collect and analyze memory usage data for each individual Rails action controller."
   s.email = "philippe@lerohellec.com"
   s.extra_rdoc_files = [
@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "app/controllers/memory_tracker/dashboards_controller.rb",
+    "app/helpers/memory_tracker/dashboards_helper.rb",
     "app/views/layouts/memory_tracker.html.erb",
     "app/views/memory_tracker/dashboards/index.html.erb",
     "config/routes.rb",
