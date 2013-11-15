@@ -1,3 +1,3 @@
 MemoryTracker::Engine.routes.draw do
-  get '/'       => 'dashboards#index', :as => :dashboards
+  get '/'       => 'memory_tracker/dashboards#index', :as => :dashboards
 end
