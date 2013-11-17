@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
     "app/views/memory_tracker/dashboards/index.html.erb",
     "config/routes.rb",
     "lib/memory_tracker.rb",
+    "lib/memory_tracker/version.rb",
     "lib/memory_tracker/engine.rb",
     "lib/memory_tracker/env.rb",
     "lib/memory_tracker/gc_stat.rb",
