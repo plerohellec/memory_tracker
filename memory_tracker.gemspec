@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Philippe Le Rohellec"]
   s.date = "2013-11-15"
+  s.summary = "Rails memory allocations tracker"
   s.description = "Collect and analyze memory usage data for each individual Rails action controller."
   s.email = "philippe@lerohellec.com"
   s.extra_rdoc_files = [
@@ -23,6 +24,7 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
+    "app/controllers/memory_tracker/application_controller.rb",
     "app/controllers/memory_tracker/dashboards_controller.rb",
     "app/helpers/memory_tracker/dashboards_helper.rb",
     "app/views/layouts/memory_tracker.html.erb",
@@ -43,9 +45,7 @@ Gem::Specification.new do |s|
 
   s.homepage = "http://github.com/plerohellec/memory_tracker"
   s.licenses = ["MIT"]
-  s.require_paths = ["lib"]
   s.rubygems_version = "2.0.3"
-  s.summary = "Rails memory allocations tracker"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

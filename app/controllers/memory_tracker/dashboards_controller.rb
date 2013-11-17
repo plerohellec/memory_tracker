@@ -1,5 +1,7 @@
+require_dependency "memory_tracker/application_controller"
+
 module MemoryTracker
-  class DashboardsController <  ActionController::Base
+  class DashboardsController < ApplicationController
 
     layout 'memory_tracker'
 
