@@ -1,6 +1,5 @@
 module MemoryTracker
   class Engine < ::Rails::Engine
-
     isolate_namespace MemoryTracker
 
     engine_base_dir = File.expand_path("../../..",     __FILE__)
@@ -20,4 +19,3 @@ module MemoryTracker
     end
   end
 end
-

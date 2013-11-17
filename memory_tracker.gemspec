@@ -73,4 +73,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<bundler>, ["~> 1.0"])
   end
 end
-
