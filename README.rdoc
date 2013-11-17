@@ -1,18 +1,45 @@
 = MemoryTracker
 
-MemoryTracker collects and analyzes memory usage data for each controller action of a Rails application. It's implemented as a Rails engine with a middleware that captures stats before and after each query. 
-
-== How?
-It uses GC.stats (Ruby garbage collector) to find how many objects were allocated, how many heaps were created and how many times the garbage collector ran.
+MemoryTracker collects, analyzes and reports memory usage data of each controller action of a Rails application. 
 
 == Features
 * Collect stats on each controller action memory consumption.
 * Write a log file with GC.stat data.
-* The engine includes a couple of web pages that shows a summary of memory utilization per controller action.
+* The engine includes a couple of web pages that shows a summary of average memory allocation per controller action.
+
+== How?
+It uses system memory data and Ruby garbage collector statistics to find the memory currently used by The Rails processes, how many objects were allocated in Ruby heaps, how many heaps were created and how many times the garbage collector ran. The MemoryTracker middleware captures the data before and after each HHTP request and saves the deltas per controller/action in a variety of stores.
+MemroyTracker is implemented as a Rails engine and reports its statistics in a webpage served by the application where it's embedded. The report currenlty includes data from the InMemoryStore.
+
+== Stores
+MemoryTracker currently comes with 3 stores.
+
+* The InMemoryStore keeps counters in memory for the process where it runs. This store in itself uses very little memory as it only keeps a set of counters per controller/action in the application. Since it doesn't do any IO, it is also extremely fast. The data is immediately available without any need for a background aggregation tasks.
+
+* The GcStatLogfile store simplywrite memory stats to a logfile called 'memtracker_gcstat.log' after each HTTP request.
+
+* The UrlLogfileStore also stores data in a logfile ('memtracker_urls.log') but instead of writing the raw memory data, it records the url that was requested along with the memory deltas between the current request and the previous one. It also highlights the urls where the deltas were the greatest. It's sometimes intersting to browse through this file URLs that are particularly greedy.
+
 
 == Enable MemoryTracker in a Rails application
-In config/routes.rb
+Add it to your Gemfile:
+  gem 'memory_tracker'
+To get access to the MemoryTracker UI and see the stats, the engine must be mounted at config/routes.rb
   mount MemoryTracker::Engine, at: "/memory_tracker"
+Once the app is running, go to /memtracker to review the list of controller actions.
+
+== Requirements
+The gem has been tested and is compatible with:
+* Ruby 2.0
+* Rails 3.2
+
+== Tips
+* Ruby processes rarely leak memory. Instead they allocate large amounts of memory and never release it. This memory is not lost, it's still available to the process that allocated it but it's unavailable for all othre processes in the system.
+* It doesn't matter if the average controller action in the application only consumes 50MB of memory, the size of the process will still reach 100MB if a single one of the controller actions requires 100MB. Therefore, the biggest bang for the bug is to be found in the action at the top of the list. Fix that one and the whole process memory will go down to the level of the second most expansive controller action. 
+
+== Coming soon
+* Redis store.
+* Store and report the most exxpansive URLs.
 
 == Contributing to memory_tracker
  
