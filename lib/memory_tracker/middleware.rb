@@ -7,7 +7,7 @@ module MemoryTracker
     end
 
     def memory_tracker
-      ::MemoryTracker::MemoryTracker.instance
+      MemoryTracker.instance
     end
 
     def call(env)
