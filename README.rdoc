@@ -1,11 +1,10 @@
 = MemoryTracker
 
-MemoryTracker collects, analyzes and reports memory usage data of each controller action of a Rails application. 
+MemoryTracker collects, analyzes and reports memory usage data of each controller action of a Rails application. The data will identify the parts of the application that are the most memory hungry, so that they can be fixed and the overall memory usage of the application be reduced.
 
 == Features
 * Collect stats on each controller action memory consumption.
-* Write a log file with GC.stat data.
-* The engine includes a couple of web pages that shows a summary of average memory allocation per controller action.
+* Display stats on every controller action of the application in a engine webpage embedded in the gem.
 
 == How?
 It uses system memory data and Ruby garbage collector statistics to find the memory currently used by The Rails processes, how many objects were allocated in Ruby heaps, how many heaps were created and how many times the garbage collector ran. The MemoryTracker middleware captures the data before and after each HHTP request and saves the deltas per controller/action in a variety of stores.
@@ -34,7 +33,7 @@ The gem has been tested and is compatible with:
 * Rails 3.2
 
 == Tips
-* Ruby processes rarely leak memory. Instead they allocate large amounts of memory and never release it. This memory is not lost, it's still available to the process that allocated it but it's unavailable for all other processes in the system.
+* Ruby processes rarely leak memory. Instead they allocate memory whenever they need it and never release it. This memory is not lost, it's still available to the process that allocated it but it's unavailable for all other processes in the system.
 * It doesn't matter if the average controller action in the application only consumes 50MB of memory, the size of the process will still reach 100MB if a single one of the controller actions requires 100MB. Therefore, the biggest bang for the bug is to be found in the action at the top of the list. Fix that one and the whole process memory will go down to the level of the second most expensive controller action.
 
 == Coming soon

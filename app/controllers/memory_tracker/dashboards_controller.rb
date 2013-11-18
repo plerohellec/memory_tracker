@@ -10,7 +10,11 @@ module MemoryTracker
       @data = stats.to_a
       sort_by = params[:sort_by] ? params[:sort_by].to_sym : :count
       if @data.any? && @data.first.keys.include?(sort_by)
-        @data = @data.sort{ |a,b| b[sort_by].to_f/b[:num] <=> a[sort_by].to_f/a[:num] }
+        if sort_by == :num
+          @data = @data.sort { |a,b| b[sort_by] <=> a[sort_by] }
+        else
+          @data = @data.sort{ |a,b| b[sort_by].to_f/b[:num] <=> a[sort_by].to_f/a[:num] }
+        end
       end
 
       respond_to do |format|
