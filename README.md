@@ -1,4 +1,4 @@
-= MemoryTracker
+# MemoryTracker
 
 MemoryTracker collects, analyzes and reports memory usage data of each controller action of a Rails application. The data will identify the parts of the application that are the most memory hungry, so that they can be fixed and the overall memory usage of the application be reduced.
 
@@ -23,11 +23,15 @@ MemoryTracker currently comes with 3 stores.
 * The UrlLogfileStore also stores data in a log file ('#{Rails.root}/log/memtracker_urls.log') but instead of writing the raw memory data, it records the URL that was requested along with the memory deltas between the current request and the previous one. It also highlights the urls where the deltas were the greatest. It's sometimes interesting to browse through this file URLs that are particularly greedy.
 
 
-# Enable MemoryTracker in a Rails application
+# Enabling MemoryTracker
 Add it to your Gemfile:
-  gem 'memory_tracker'
+```ruby
+gem 'memory_tracker'
+```
 To get access to the MemoryTracker UI and see the stats, the engine must be mounted at config/routes.rb
-  mount MemoryTracker::Engine, at: "/memory_tracker"
+```ruby
+mount MemoryTracker::Engine, at: "/memory_tracker"
+```
 Once the app is running, go to /memtracker to review the list of controller actions.
 
 # Requirements
