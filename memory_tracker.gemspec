@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
-    "README.rdoc",
+    "README.md",
     "Rakefile",
     "app/controllers/memory_tracker/application_controller.rb",
     "app/controllers/memory_tracker/dashboards_controller.rb",
