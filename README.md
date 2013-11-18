@@ -12,6 +12,7 @@ The dashboard is at /memtracker in the host application (but you need to mount t
 
 # How?
 MemoryTracker uses system memory data and Ruby garbage collector statistics to find the memory currently used by The Rails processes, how many objects were allocated in Ruby heaps, how many heaps were created and how many times the garbage collector ran. The MemoryTracker middleware captures the data before and after each HHTP request and saves the deltas per controller/action in a variety of stores.
+
 MemoryTracker is implemented as a Rails engine and reports its statistics in a web page served by the application where it's embedded. The report currently includes data from the InMemoryStore.
 
 # Stores
@@ -31,7 +32,7 @@ gem 'memory_tracker'
 ```
 To get access to the MemoryTracker UI and see the stats, the engine must be mounted at config/routes.rb
 ```ruby
-mount MemoryTracker::Engine, at: "/memory_tracker"
+mount MemoryTracker::Engine => "/memtracker"
 ```
 Once the app is running, go to /memtracker to review the list of controller actions.
 
