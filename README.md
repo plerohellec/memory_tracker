@@ -7,7 +7,8 @@ MemoryTracker collects, analyzes and reports memory usage data of each controlle
 * Display stats on every controller action of the application in a engine webpage embedded in the gem.
 
 # Dashboard
-![Image](https://github.com/plerohellec/memory_tracker/tree/master/docs/memory_tracker_dashboard.png?raw=true)
+The dashboard is at /memtracker in the host application (but you need to mount the engine in the app first, see below).
+![Dashboard snapshot](https://github.com/plerohellec/memory_tracker/tree/master/docs/memory_tracker_dashboard.png?raw=true)
 
 # How?
 MemoryTracker uses system memory data and Ruby garbage collector statistics to find the memory currently used by The Rails processes, how many objects were allocated in Ruby heaps, how many heaps were created and how many times the garbage collector ran. The MemoryTracker middleware captures the data before and after each HHTP request and saves the deltas per controller/action in a variety of stores.
@@ -45,10 +46,12 @@ The gem has been tested and is compatible with:
 * You want the heap_used to be 0, always. If not 0, it means this controller action asked for an amount of memory that required the allocation of new heaps.
 * rss and vsize should be very low in a memory conscious application.
 * total_allocated_heaps should mostly be in the same range for all controller actions. Outliers are the ones causing memory bloat.
+* The stats are only meaningful in the production environment. Do not believe anything you see in the development environment. 
 
 # Coming soon
 * Redis store.
 * Store and report the most expensive URLs.
+* Support for Ruby 1.9 and Rails 4.
 
 # Contributing to memory_tracker
  
