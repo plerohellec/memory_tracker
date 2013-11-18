@@ -7,7 +7,7 @@ MemoryTracker collects, analyzes and reports memory usage data of each controlle
 * Display stats on every controller action of the application in a engine webpage embedded in the gem.
 
 == Dashboard
-https://github.com/plerohellec/memory_tracker/tree/master/docs/memory_tracker_dashboard.png
+![Dashboard](https://github.com/plerohellec/memory_tracker/tree/master/docs/memory_tracker_dashboard.png)
 
 == How?
 MemoryTracker uses system memory data and Ruby garbage collector statistics to find the memory currently used by The Rails processes, how many objects were allocated in Ruby heaps, how many heaps were created and how many times the garbage collector ran. The MemoryTracker middleware captures the data before and after each HHTP request and saves the deltas per controller/action in a variety of stores.
