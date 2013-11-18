@@ -1,3 +1,14 @@
+<h1>Current State</h1>
+<table width='300px'>
+<tr><td>Stats displayed for pid</td><td><%= @pid %></td></tr>
+<tr><td>Current RSS</td><td><%= '%.1f' % @rss %>MB</td></tr>
+<tr><td>Current VSIZE</td><td><%= '%.1f' % @vsize %>MB</td></tr>
+<tr><td>Number of ruby heaps</td><td><%= @num_heaps %></td></tr>
+</table>
+<br/>
+
+<hr>
+<h1>Average Deltas</h1>
 <% keys = [ :rss, :vsize, :count, :total_allocated_object, :heap_used ] %>
 <table width="100%">
   <tr>
@@ -14,8 +25,21 @@
       <td><%= "#{row[:action]}" %></td>
       <td><%= row[:num] %></td>
       <% keys.each do |key| %>
-        <td><%= '%.3f' % (row[key].to_f/row[:num]) %></td>
+        <td><%= display_num(row[key], row[:num]) %></td>
       <% end %>
     </tr>
   <% end %>
 </table>
+
+<h2>Legend</h2>
+<p>All numbers are average per controller action.</p>
+<i>
+<ul>
+<li>num: number of HTTP requests</li>
+<li>rss: resident memory (MB)</li>
+<li>vsize: virtual memory (MB)</lib>
+<li>count: number of times the garbage collector ran</li>
+<li>total_allocated_object: number of objects allocated on the ruby heaps</li>
+<li>heap_used: number of allocated ruby heaps</li>
+</ul>
+</i>

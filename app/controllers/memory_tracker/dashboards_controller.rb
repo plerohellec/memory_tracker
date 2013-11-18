@@ -17,6 +17,11 @@ module MemoryTracker
         end
       end
 
+      @pid = Process.pid
+      @rss = Request.rss
+      @vsize = Request.vsize
+      @num_heaps = GC.stat[:heap_used]
+
       respond_to do |format|
         format.json do
           render :json => @data.to_json
