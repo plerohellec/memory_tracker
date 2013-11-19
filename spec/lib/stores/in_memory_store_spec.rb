@@ -38,13 +38,13 @@ module MemoryTracker
         end
 
         it 'should respond to name' do
-          manager = Manager.new(60)
+          manager = Manager.new(:window_length => 60)
           manager.should respond_to(:name)
         end
 
         it 'should return stats from older window' do
           Time.stub(:now).and_return(start_time)
-          manager = Manager.new(60)
+          manager = Manager.new(:window_length => 60)
           request = Request.new(@env)
           stub_gcstat_delta('Boat', 'sail')
           manager.push(request.close)
@@ -64,7 +64,7 @@ module MemoryTracker
 
         it 'should rotate windows' do
           Time.stub(:now).and_return(start_time)
-          manager = Manager.new(60)
+          manager = Manager.new(:window_length => 60)
           request = Request.new(@env)
           stub_gcstat_delta('Boat', 'sail')
           manager.push(request.close)

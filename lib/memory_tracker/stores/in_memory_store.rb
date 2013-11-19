@@ -1,16 +1,16 @@
 module MemoryTracker
   module Stores
     module InMemoryStore
-      class Manager
-        def initialize(window_length = 60*60*4)
-          @length  = window_length
+      class Manager < Base
+        register_store :memory
+
+        def initialize(opts = {})
+          @length  = opts.fetch(:window_length, 60*60*4)
+
           @window1 = StatInterval.new(Time.now - @length/2, @length)
           @window2 = StatInterval.new(Time.now, @length)
         end
 
-        def name
-          :memory
-        end
 
         def push(request)
           rotate_windows

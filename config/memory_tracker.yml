@@ -1,0 +1,20 @@
+defaults:   &defaults
+  stores:
+    - name: memory
+      window_length: 14400
+    - name: url_logfile
+      filename: log/memtracker_urls.log
+      logger_class: ActiveSupport::BufferedLogger
+    - name: gcstat_logfile
+      filename: log/memtracker_gcstat.log
+      logger_class: ActiveSupport::BufferedLogger
+
+
+production:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults

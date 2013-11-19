@@ -3,12 +3,15 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'singleton'
 
+require 'active_support/core_ext'
 require 'rspec'
 require 'sys/proctable'
 require 'memory_tracker'
 require 'memory_tracker/gc_stat'
 require 'memory_tracker/request'
 require 'memory_tracker/memory_tracker'
+require 'memory_tracker/stores/base'
+require 'memory_tracker/stores/loader'
 require 'memory_tracker/stores/in_memory_store'
 require 'memory_tracker/stores/gcstat_logfile_store'
 require 'memory_tracker/stores/url_logfile_store'

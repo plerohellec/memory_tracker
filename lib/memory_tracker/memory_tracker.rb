@@ -3,8 +3,8 @@ module MemoryTracker
     include Singleton
     include Enumerable
 
-    attr_accessor :gcstat_logger
-    
+    attr_accessor :config
+
     def stores
       @stores ||= {}
     end

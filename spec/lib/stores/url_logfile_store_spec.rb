@@ -1,10 +1,14 @@
+require 'spec_helper'
+
 module MemoryTracker
   module Stores
     describe UrlLogfileStore do
       before :each do
-        logger_class = double("logger_class")
+        logger_class_name = double("logger_class_name")
+        logger_class      = double("logger_class")
+        allow(logger_class_name).to receive(:constantize) { logger_class }
         allow(logger_class).to receive(:new)
-        @logstore = UrlLogfileStore.new logger_class, "foo/log"
+        @logstore = UrlLogfileStore.new(:logger_class => logger_class_name, :filename => "foo/log")
       end
 
       it 'implements the store role' do

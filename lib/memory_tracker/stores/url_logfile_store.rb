@@ -1,17 +1,17 @@
 module MemoryTracker
   module Stores
-    class UrlLogfileStore
-      def initialize(logger_class, logfile_path)
-        @logger = logger_class.new(logfile_path)
-      end
+    class UrlLogfileStore < Base
+      register_store :url_logfile
 
-      def name
-        :url_logfile
+      def initialize(opts)
+        logger_class = opts.fetch(:logger_class, 'ActiveSupport::BufferedLogger')
+        filename     = opts.fetch(:filename, "memtracker_urls.log")
+
+        @logger = logger_class.constantize.new(filename)
       end
 
       def push(request)
         @request = request
-
         write_request_log
       end
 
