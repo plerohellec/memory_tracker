@@ -36,3 +36,10 @@ RSpec.configure do |config|
   # config.mock_with :rr
 #   config.mock_with :rspec
 end
+
+class Rails
+  def self.root
+    ''
+  end
+end
+

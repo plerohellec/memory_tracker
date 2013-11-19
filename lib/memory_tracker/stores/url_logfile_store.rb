@@ -5,7 +5,7 @@ module MemoryTracker
 
       def initialize(opts)
         logger_class = opts.fetch(:logger_class, 'ActiveSupport::BufferedLogger')
-        filename     = opts.fetch(:filename, "memtracker_urls.log")
+        filename     = opts.fetch(:filename, "#{Rails.root}/log/memtracker_urls.log")
 
         @logger = logger_class.constantize.new(filename)
       end
