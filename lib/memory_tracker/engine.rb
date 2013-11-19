@@ -23,8 +23,12 @@ module MemoryTracker
     end
 
     initializer "memory_tracker.setup_stores" do |app|
-      MemoryTracker.instance.config[:stores].each do |store|
-        Stores::Loader.add_store(MemoryTracker.instance, store)
+      if MemoryTracker.instance.config
+        MemoryTracker.instance.config[:stores].each do |store|
+          Stores::Loader.enable_store(MemoryTracker.instance, store)
+        end
+      else
+        Stores::Loader.enable_all(MemoryTracker.instance)
       end
     end
   end

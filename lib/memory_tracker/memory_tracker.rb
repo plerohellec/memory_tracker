@@ -8,7 +8,7 @@ module MemoryTracker
     def stores
       @stores ||= {}
     end
-    
+
     def add_store(store)
       stores[store.name] = store
     end
