@@ -29,19 +29,6 @@ module MemoryTracker
       stores[store_name].stats
     end
 
-    def self.track_block(*args)
-      self.instance.track_block(*args)
-    end
-
-    def track_block(name, &block)
-      raise ArgumentError unless block_given?
-      before = GC.stat
-      ret = yield
-      after = GC.stat
-      gcstat_logger.debug "gcstat diff for #{name}: #{GcStat.gcdiff(before, after)}"
-      ret
-    end
-
     private
     
     def each_store
