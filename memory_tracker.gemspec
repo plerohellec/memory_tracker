@@ -41,6 +41,8 @@ Gem::Specification.new do |s|
     "lib/memory_tracker/stores/gcstat_logfile_store.rb",
     "lib/memory_tracker/stores/in_memory_store.rb",
     "lib/memory_tracker/stores/url_logfile_store.rb",
+    "lib/memory_tracker/stores/loader.rb",
+    "lib/memory_tracker/stores/base.rb",
     "memory_tracker.gemspec"]
   s.test_files = Dir["spec/**/*"]
 
