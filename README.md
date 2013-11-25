@@ -9,7 +9,9 @@ MemoryTracker collects, analyzes and reports memory usage data of each controlle
 # Dashboard
 ## Screenshot
 The dashboard is at /memtracker in the host application (but you need to mount the engine in the app first, see below).
-![Dashboard snapshot](https://github.com/plerohellec/memory_tracker/tree/master/docs/memory_tracker_dashboard.png?raw=true)
+
+[Dashboard snapshot](https://raw.github.com/plerohellec/memory_tracker/master/docs/memory_tracker_dashboard.png)
+
 That's where the collected statistics are displayed.
 
 ## What to look for?
@@ -34,6 +36,7 @@ MemoryTracker currently comes with 3 stores.
 
 # Config file
 [memory_tracker.yml](https://github.com/plerohellec/memory_tracker/blob/master/config/memory_tracker.yml)
+
 The config file is optional. If you choose to write one, place it in "#{Rails.root}/config".
 In the absence of a custom config file, memory_tracker will fallback to the file linked above in the gem.
 
