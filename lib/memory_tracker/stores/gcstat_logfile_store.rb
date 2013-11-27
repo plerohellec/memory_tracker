@@ -4,7 +4,7 @@ module MemoryTracker
       register_store :gcstat_logfile
 
       def initialize(opts)
-        logger_class = opts.fetch(:logger_class, 'ActiveSupport::BufferedLogger')
+        logger_class = opts.fetch(:logger_class, 'Logger')
         filename     = opts.fetch(:filename, "#{Rails.root}/log/memtracker_gcstat.log")
 
         @logger = logger_class.constantize.new(filename)
