@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
+      s.add_runtime_dependency(%q<logfile_interval>, ["~>1.0.0"])
       s.add_development_dependency(%q<debugger>, [">= 0"])
       s.add_development_dependency(%q<rspec>, ["~> 2.14.0"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
@@ -63,6 +64,7 @@ Gem::Specification.new do |s|
 
     else
       s.add_dependency(%q<sys-proctable>, [">= 0"])
+      s.add_dependency(%q<logfile_interval>, ["~>1.0.0"])
       s.add_dependency(%q<debugger>, [">= 0"])
       s.add_dependency(%q<rspec>, ["~> 2.14.0"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
@@ -72,6 +74,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<sys-proctable>, [">= 0"])
+    s.add_dependency(%q<logfile_interval>, ["~>1.0.0"])
     s.add_dependency(%q<debugger>, [">= 0"])
     s.add_dependency(%q<rspec>, ["~> 2.14.0"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
