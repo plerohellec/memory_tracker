@@ -3,6 +3,8 @@ module MemoryTracker
     class GcstatLogfileStore < Base
       register_store :gcstat_logfile
 
+      COLUMNS = [ :count, :heap_final_num, :heap_free_num, :heap_increment, :heap_length, :heap_live_num, :heap_used, :rss, :total_allocated_object, :total_freed_object, :vsize ]
+
       def initialize(opts)
         logger_class = opts.fetch(:logger_class, 'Logger')
         filename     = opts.fetch(:filename, "#{Rails.root}/log/memtracker_gcstat.log")
@@ -25,15 +27,15 @@ module MemoryTracker
       private
 
       def write_header
-        @logger.info "##{@request.end_gcstat.ordered_keys.join(',')}"
+        @logger.info "##{COLUMNS.join(',')}"
       end
 
       def write_request_log
-        @logger.info logline
+        @logger.info "#{Time.now.to_i},#{logline}"
       end
 
       def logline
-        @request.end_gcstat.ordered_values.join ','
+        @request.end_gcstat.ordered_values(COLUMNS).join ','
       end
     end
   end

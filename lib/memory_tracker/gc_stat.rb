@@ -10,8 +10,8 @@ module MemoryTracker
       @stats.keys.sort
     end
 
-    def ordered_values
-      ordered_keys.inject([]) do |vals, key|
+    def ordered_values(ordered_columns = ordered_keys)
+      ordered_columns.inject([]) do |vals, key|
         vals << @stats[key]
         vals
       end
