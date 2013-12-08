@@ -38,7 +38,6 @@ Gem::Specification.new do |s|
     "lib/memory_tracker/memory_tracker.rb",
     "lib/memory_tracker/middleware.rb",
     "lib/memory_tracker/request.rb",
-    "lib/memory_tracker/stores/gcstat_logfile_parser.rb",
     "lib/memory_tracker/stores/gcstat_logfile_store.rb",
     "lib/memory_tracker/stores/in_memory_store.rb",
     "lib/memory_tracker/stores/url_logfile_store.rb",
