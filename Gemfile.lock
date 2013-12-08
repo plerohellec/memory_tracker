@@ -3,7 +3,6 @@ PATH
   specs:
     memory_tracker (1.2.0)
       activesupport
-      logfile_interval (~> 1.1.0)
       sys-proctable
 
 GEM
@@ -26,7 +25,6 @@ GEM
     diff-lcs (1.2.5)
     i18n (0.6.9)
     json (1.8.1)
-    logfile_interval (1.1.0)
     minitest (4.7.5)
     multi_json (1.8.2)
     rdoc (3.12.2)
