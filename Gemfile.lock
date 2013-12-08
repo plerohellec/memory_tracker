@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    memory_tracker (1.2.0)
+    memory_tracker (1.2.1)
       activesupport
       sys-proctable
 
