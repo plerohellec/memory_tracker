@@ -1,4 +1,4 @@
-# MemoryTracker
+# MemoryTracker [![Build Status](https://travis-ci.org/plerohellec/memory_tracker.png?branch=master)](https://travis-ci.org/plerohellec/memory_tracker)
 
 MemoryTracker finds where the memory bloat comes from in a Rails application.
 
