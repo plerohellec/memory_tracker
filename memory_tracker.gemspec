@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
     "lib/memory_tracker/memory_tracker.rb",
     "lib/memory_tracker/middleware.rb",
     "lib/memory_tracker/request.rb",
+    "lib/memory_tracker/stores/gcstat_logfile_parser.rb",
     "lib/memory_tracker/stores/gcstat_logfile_store.rb",
     "lib/memory_tracker/stores/in_memory_store.rb",
     "lib/memory_tracker/stores/url_logfile_store.rb",
@@ -50,35 +51,11 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.rubygems_version = "2.0.3"
 
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
-      s.add_runtime_dependency(%q<logfile_interval>, ["~>1.1.0"])
-      s.add_development_dependency(%q<debugger>, [">= 0"])
-      s.add_development_dependency(%q<rspec>, ["~> 2.14.0"])
-      s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_development_dependency(%q<bundler>, ["~> 1.0"])
-      s.add_dependency('activesupport')
-
-    else
-      s.add_dependency(%q<sys-proctable>, [">= 0"])
-      s.add_dependency(%q<logfile_interval>, ["~>1.1.0"])
-      s.add_dependency(%q<debugger>, [">= 0"])
-      s.add_dependency(%q<rspec>, ["~> 2.14.0"])
-      s.add_dependency(%q<rdoc>, ["~> 3.12"])
-      s.add_dependency(%q<bundler>, ["~> 1.0"])
-      s.add_dependency('activesupport')
-
-    end
-  else
-    s.add_dependency(%q<sys-proctable>, [">= 0"])
-    s.add_dependency(%q<logfile_interval>, ["~>1.1.0"])
-    s.add_dependency(%q<debugger>, [">= 0"])
-    s.add_dependency(%q<rspec>, ["~> 2.14.0"])
-    s.add_dependency(%q<rdoc>, ["~> 3.12"])
-    s.add_dependency(%q<bundler>, ["~> 1.0"])
-    s.add_dependency('activesupport')
-  end
+  s.add_runtime_dependency(%q<sys-proctable>, [">= 0"])
+  s.add_runtime_dependency(%q<logfile_interval>, ["~>1.1.0"])
+  s.add_runtime_dependency(%q<activesupport>)
+  s.add_development_dependency(%q<debugger>, [">= 0"])
+  s.add_development_dependency(%q<rspec>, ["~> 2.14.0"])
+  s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
+  s.add_development_dependency(%q<bundler>, ["~> 1.0"])
 end
