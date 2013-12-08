@@ -35,7 +35,8 @@ module MemoryTracker
       end
 
       def logline
-        @request.end_gcstat.ordered_values(COLUMNS).join ','
+        logline = "#{@request.controller}##{@request.action},"
+        logline << @request.end_gcstat.ordered_values(COLUMNS).join(',')
       end
     end
   end
