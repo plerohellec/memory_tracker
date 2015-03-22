@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'singleton'
 
+require 'active_support'
 require 'active_support/core_ext'
 require 'rspec'
 require 'sys/proctable'
