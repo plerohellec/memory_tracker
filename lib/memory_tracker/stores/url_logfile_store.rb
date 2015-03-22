@@ -8,6 +8,11 @@ module MemoryTracker
         filename     = opts.fetch(:filename, "#{Rails.root}/log/memtracker_urls.log")
 
         @logger = logger_class.constantize.new(filename)
+        if @logger.respond_to?(:formatter)
+          @logger.formatter = proc do |severity, datetime, progname, msg|
+            "#{msg}\n"
+          end
+        end
       end
 
       def push(request)

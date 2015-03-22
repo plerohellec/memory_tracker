@@ -10,6 +10,12 @@ module MemoryTracker
         filename     = opts.fetch(:filename, "#{Rails.root}/log/memtracker_gcstat.log")
 
         @logger = logger_class.constantize.new(filename)
+        if @logger.respond_to?(:formatter)
+          @logger.formatter = proc do |severity, datetime, progname, msg|
+            "#{msg}\n"
+          end
+        end
+
         @num_lines = 0
       end
 
