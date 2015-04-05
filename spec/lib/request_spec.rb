@@ -9,8 +9,8 @@ module MemoryTracker
 
     it 'should initalize start_gcstat' do
       @request.start_gcstat.should be_a(GcStat)
-      @request.start_gcstat.stats.keys.should include :rss
-      @request.start_gcstat.stats.keys.should include :vsize
+      @request.start_gcstat.keys.should include :rss
+      @request.start_gcstat.keys.should include :vsize
     end
 
     it 'should have a controller' do

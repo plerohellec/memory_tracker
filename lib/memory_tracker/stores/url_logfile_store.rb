@@ -32,8 +32,8 @@ module MemoryTracker
       def logline
         pid = Process.pid
 
-        end_gcstats   = @request.end_gcstat.stats
-        start_gcstats = @request.start_gcstat.stats
+        end_gcstats   = @request.end_gcstat
+        start_gcstats = @request.start_gcstat
         delta_gcstats = @request.gcstat_delta.stats
 
         log_msg = "#{Time.now.localtime.strftime("%m-%d %H:%M:%S")} pid:#{'%05d' % pid}"

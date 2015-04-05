@@ -1,20 +1,70 @@
 module MemoryTracker
   class GcStat
-    attr_reader :stats
+
+    include Enumerable
+
+    RUBY22_TO_CANONICAL_MAPPING = { total_allocated_objects: :total_allocated_object,
+                                    total_freed_objects:     :total_freed_object,
+                                    heap_allocated_pages:   :heap_used
+                     }
+    CANONICAL_TO_RUBY22_MAPPING = RUBY22_TO_CANONICAL_MAPPING.invert
 
     def initialize(rss, vsize)
       @stats = GC.stat.merge({ :rss => rss, :vsize => vsize})
     end
 
+    def each(&block)
+      @stats.each do |k, v|
+        yield canonical_key_name(k), v
+      end
+    end
+
+    def keys
+      @stats.keys
+    end
+
     def ordered_keys
-      @stats.keys.sort
+      @stats.keys.map { |k| canonical_key_name(k) }.sort
     end
 
     def ordered_values(ordered_columns = ordered_keys)
       ordered_columns.inject([]) do |vals, key|
-        vals << @stats[key]
-        vals
+        vals << @stats[current_version_key_name(key)]
       end
+    end
+
+    def [](key)
+      @stats[current_version_key_name(key)]
+    end
+
+    def canonical_key_name(key)
+      self.class.canonical_key_name(key)
+    end
+
+    def current_version_key_name(key)
+      self.class.current_version_key_name(key)
+    end
+
+    def self.canonical_key_name(key)
+      canonical = key
+      case RUBY_VERSION
+      when /\A2\.2\./
+        canonical = RUBY22_TO_CANONICAL_MAPPING.fetch(key, key)
+      end
+      canonical
+    end
+
+    def self.current_version_key_name(key)
+      current_key_name = key
+      case RUBY_VERSION
+      when /\A2\.2\./
+        current_key_name = CANONICAL_TO_RUBY22_MAPPING.fetch(key, key)
+      end
+      current_key_name
+    end
+
+    def self.heap_used
+      GC.stat[current_version_key_name(:heap_used)]
     end
 
     def self.gcdiff(before, after)
@@ -43,8 +93,8 @@ module MemoryTracker
 
     def initialize(before, after)
       @after = after
-      @stats = after.stats.inject({}) do |h, (k, v)|
-        h[k] = after.stats[k] - before.stats[k]
+      @stats = after.inject({}) do |h, (k, v)|
+        h[k] = after[k] - before[k]
         h
       end
     end
@@ -55,8 +105,8 @@ module MemoryTracker
       h[:total_allocated_object] = stats[:total_allocated_object]
       h[:count] = stats[:count]
       h[:rss] = stats[:rss]
-      h[:heap_used] = @after.stats[:heap_used]
-      h[:in_use]    = @after.stats[:total_allocated_object] - @after.stats[:total_freed_object]
+      h[:heap_used] = @after[:heap_used]
+      h[:in_use]    = @after[:total_allocated_object] - @after[:total_freed_object]
       h
     end
   end

@@ -22,7 +22,7 @@ module MemoryTracker
       @pid = Process.pid
       @rss = Request.rss
       @vsize = Request.vsize
-      @num_heaps = GC.stat[:heap_used]
+      @num_heaps = GcStat.heap_used
 
       respond_to do |format|
         format.json do
