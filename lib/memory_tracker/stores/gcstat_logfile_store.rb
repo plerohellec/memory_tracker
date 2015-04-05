@@ -3,7 +3,7 @@ module MemoryTracker
     class GcstatLogfileStore < Base
       register_store :gcstat_logfile
 
-      COLUMNS = [ :count, :heap_final_num, :heap_free_num, :heap_increment, :heap_length, :heap_live_num, :heap_used, :rss, :total_allocated_object, :total_freed_object, :vsize ]
+      COLUMNS = [ :count, :heap_final_num, :heap_free_num, :heap_length, :heap_live_num, :heap_used, :rss, :total_allocated_object, :total_freed_object, :vsize ]
 
       def initialize(opts)
         logger_class = opts.fetch(:logger_class, 'Logger')

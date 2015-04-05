@@ -5,8 +5,12 @@ module MemoryTracker
 
     RUBY22_TO_CANONICAL_MAPPING = { total_allocated_objects: :total_allocated_object,
                                     total_freed_objects:     :total_freed_object,
-                                    heap_allocated_pages:   :heap_used
-                     }
+                                    heap_allocated_pages:    :heap_used,
+                                    heap_live_slots:         :heap_live_num,
+                                    heap_free_slots:         :heap_free_num,
+                                    heap_final_slots:        :heap_final_num,
+                                    heap_sorted_length:      :heap_length
+                                  }
     CANONICAL_TO_RUBY22_MAPPING = RUBY22_TO_CANONICAL_MAPPING.invert
 
     def initialize(rss, vsize)
